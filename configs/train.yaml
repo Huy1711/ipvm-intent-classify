@@ -10,7 +10,7 @@ dataset:
     padding: *padding
 
   loaders:
-    batch_size: 4
+    batch_size: 8
     num_workers: 0
 
 model:
@@ -39,6 +39,6 @@ loggers:
 trainer:
   max_epochs: 10
   strategy: ddp_find_unused_parameters_false
-  accelerator: cpu
-  # devices: [0, 1]
+  accelerator: gpu
+  devices: [0, 1]
   fast_dev_run: false
