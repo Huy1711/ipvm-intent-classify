@@ -22,7 +22,7 @@ def main(config: DictConfig):
     callbacks = []
     learning_rate_cb = pl.callbacks.LearningRateMonitor()
     callbacks.append(learning_rate_cb)
-    if config.callbacks.get("cb"):
+    if config.callbacks.get("checkpointing"):
         checkpoint_cb = pl.callbacks.ModelCheckpoint(**config.callbacks.checkpointing)
         callbacks.append(checkpoint_cb)
 

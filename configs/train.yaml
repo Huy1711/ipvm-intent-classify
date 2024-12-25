@@ -27,7 +27,7 @@ callbacks:
     save_top_k: 10
     save_last: True
     filename: "{epoch}-{val_acc:.5f}"
-    every_n_epochs: 5
+    every_n_epochs: 1
 
 loggers:
   tensorboard:
