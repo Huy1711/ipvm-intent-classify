@@ -2,3 +2,8 @@ torch
 pandas
 matplotlib
 transformers
+lightning
+tensorboardX
+tensorboard
+omegaconf
+tqdm

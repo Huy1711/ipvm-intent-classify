@@ -1,0 +1,44 @@
+dataset:
+  train:
+    filepath: ./data/7k_sentences_train.jsonl
+    max_len: &max_len 512
+    padding: &padding "max_length"
+
+  val:
+    filepath: ./data/7k_sentences_eval.jsonl
+    max_len: *max_len
+    padding: *padding
+
+  loaders:
+    batch_size: 4
+    num_workers: 0
+
+model:
+  num_classes: 5
+  hidden_dim: 768
+  dropout: 0.3
+
+optimizer:
+  lr: 1e-05
+
+callbacks:
+  checkpointing:
+    monitor: val_acc
+    save_top_k: 10
+    save_last: True
+    filename: "{epoch}-{val_acc:.5f}"
+    every_n_epochs: 5
+
+loggers:
+  tensorboard:
+    save_dir: lightning_logs
+    name: null
+    version: null
+    default_hp_metric: false
+
+trainer:
+  max_epochs: 10
+  strategy: ddp_find_unused_parameters_false
+  accelerator: cpu
+  # devices: [0, 1]
+  fast_dev_run: false
