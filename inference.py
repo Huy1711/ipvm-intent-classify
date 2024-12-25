@@ -7,7 +7,7 @@ from intent_classify.utils import load_dataset, convert_intent_label_to_id, id_t
 
 CHECKPOINT_PATH = "checkpoints/epoch7.ckpt"
 EVAL_SET_PATH = "data/139_sentences_eval.jsonl"
-
+PREDICT_SAVE_PATH = "data/139_sentences_predict.jsonl"
 
 def predict(inputs):
     with torch.no_grad():
@@ -24,20 +24,19 @@ if __name__ == "__main__":
     )
     model.eval()
 
-    eval_data = load_dataset(EVAL_SET_PATH)
-    eval_data = convert_intent_label_to_id(eval_data)
+    inference_data = load_dataset(EVAL_SET_PATH)
 
-    wrong = 0
     predictions = []
-    for data in eval_data:
+    for data in inference_data:
         text = data["text"]
-        label = id_to_label_dict[data["label"]]
         inputs = tokenizer(text, return_tensors="pt")
         prediction = id_to_label_dict[predict(inputs)]
-        if prediction != label:
-            print(f"Sentence: {text}")
-            print("Predict:", prediction, "| Ground truth:", label)
-            print("-"*80)
-            wrong += 1
+        predictions.append({
+            "text": text,
+            "pred": prediction,
+        })
 
-    print(f"Accuracy: {(len(eval_data) - wrong) * 100 / len(eval_data)}%")
+    with open(PREDICT_SAVE_PATH, "w") as f:
+        for data in predictions:
+            f.write(json.dumps(data) + "\n")
+    print(f"Successfully saved inference result to {PREDICT_SAVE_PATH}")
