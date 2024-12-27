@@ -7,3 +7,6 @@ tensorboardX
 tensorboard
 omegaconf
 tqdm
+boto3
+sagemaker
+python-dotenv

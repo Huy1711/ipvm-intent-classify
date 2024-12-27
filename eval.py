@@ -1,4 +1,4 @@
-import json
+import time
 import tqdm
 import torch
 from transformers import AutoTokenizer
@@ -34,8 +34,10 @@ if __name__ == "__main__":
     for data in tqdm.tqdm(eval_data):
         text = data["text"]
         label = id_to_label_dict[data["label"]]
+        start = time.time()
         inputs = tokenizer(text, return_tensors="pt")
         prediction = id_to_label_dict[predict(inputs)]
+        print(f"Prediction took {time.time() - start:.2f} seconds")
         if prediction != label:
             wrong_preds.append([text, prediction, label])
             wrong += 1

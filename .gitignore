@@ -173,3 +173,6 @@ cython_debug/
 /data
 checkpoints*
 *logs*
+*.pt
+*.ckpt
+*.tar.gz
