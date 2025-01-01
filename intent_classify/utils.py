@@ -17,11 +17,12 @@ id_to_label_dict = {
 }
 
 
-def load_dataset(filepath):
+def load_dataset(filepaths):
     data = []
-    with open(filepath, "r") as f:
-        for line in f:
-            data.append(json.loads(line))
+    for filepath in filepaths:
+        with open(filepath, "r") as f:
+            for line in f:
+                data.append(json.loads(line))
     return data
 
 

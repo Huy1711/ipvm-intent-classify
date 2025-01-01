@@ -176,3 +176,5 @@ checkpoints*
 *.pt
 *.ckpt
 *.tar.gz
+*.csv
+*.tsv

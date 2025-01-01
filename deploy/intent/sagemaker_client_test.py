@@ -1,6 +1,6 @@
 import boto3
 import json
-
+import time
 
 def invoke_sagemaker_endpoint(endpoint_name, input_data):
     runtime = boto3.client('sagemaker-runtime')
@@ -16,7 +16,9 @@ def invoke_sagemaker_endpoint(endpoint_name, input_data):
 
 def test_random_prediction(endpoint_name='intent-model-endpoint'):
     sample_input = {"text": "tell me about Evolv"}
+    start = time.time()
     predictions = invoke_sagemaker_endpoint(endpoint_name, sample_input)
+    print(f"Prediction took: {time.time() - start:.4f} seconds")
     print(predictions)
 
 

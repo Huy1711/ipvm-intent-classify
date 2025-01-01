@@ -1,11 +1,13 @@
 dataset:
   train:
-    filepath: ./data/7k_sentences_train.jsonl
+    filepath:
+      - ./data/7k_sentences_train.jsonl
     max_len: &max_len 512
     padding: &padding "max_length"
 
   val:
-    filepath: ./data/7k_sentences_eval.jsonl
+    filepath:
+      - ./data/7k_sentences_eval.jsonl
     max_len: *max_len
     padding: *padding
 
