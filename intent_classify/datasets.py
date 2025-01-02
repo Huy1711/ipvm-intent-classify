@@ -2,20 +2,30 @@ import torch
 from torch.utils.data import Dataset
 
 from .utils import convert_intent_label_to_id, load_dataset
-
+from .augment import WordLevelAugment, CharacterLevelAugment
 
 class TextClassificationDataset(Dataset):
-    def __init__(self, filepath, tokenizer, max_len, padding):
+    def __init__(self, filepath, tokenizer, max_len, padding, augment):
         self.dataset = load_dataset(filepath)
         self.dataset = convert_intent_label_to_id(self.dataset)
         self.tokenizer = tokenizer
         self.max_len = max_len
         self.padding = padding
+        self.augment = augment
+
+        if self.augment:
+            self.word_augment = WordLevelAugment()
+            self.char_augment = CharacterLevelAugment()
 
     def __getitem__(self, index):
         data = self.dataset[index]
         text = data["text"]
         label = data["label"]
+
+        if self.augment:
+            text = self.word_augment.apply(text)
+            text = self.char_augment.apply(text)
+
         inputs = self.tokenizer.encode_plus(
             text,
             None,
