@@ -63,7 +63,7 @@ class IntentClassificationModule(pl.LightningModule):
         return val_dl
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(
+        optimizer = torch.optim.AdamW(
             params=self.parameters(), **self.config["optimizer"]
         )
 

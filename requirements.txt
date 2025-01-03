@@ -10,3 +10,6 @@ tqdm
 boto3
 sagemaker
 python-dotenv
+nlpaug
+nltk
+sacremoses

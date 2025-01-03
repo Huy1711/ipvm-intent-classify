@@ -14,8 +14,8 @@ class TextClassificationDataset(Dataset):
         self.augment = augment
 
         if self.augment:
-            self.word_augment = WordLevelAugment()
-            self.char_augment = CharacterLevelAugment()
+            self.word_augment = WordLevelAugment(prob=0.5, aug_max=10, device="cuda:0")
+            self.char_augment = CharacterLevelAugment(prob=0.5, aug_char_max=10)
 
     def __getitem__(self, index):
         data = self.dataset[index]

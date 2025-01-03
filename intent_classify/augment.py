@@ -13,27 +13,35 @@ class CharacterLevelAugment(object):
         if random.random() > self.prob:
             return text
         aug = random.choice(self.augment_list)
-        return aug.augment(text)
+        result = aug.augment(text)[0]
+        return result if result else text
 
 
 class WordLevelAugment(object):
     def __init__(self, prob=0.3, aug_max=3, device="cpu"):
-        context_aug = naw.ContextualWordEmbsAug(
+        roberta_aug = naw.ContextualWordEmbsAug(
             model_path='roberta-base', 
             action="substitute", 
             aug_max=aug_max,
             device=device
         )
-        back_translation_aug = naw.BackTranslationAug(
-            from_model_name='facebook/wmt19-en-de', 
-            to_model_name='facebook/wmt19-de-en',
+        bert_aug = naw.ContextualWordEmbsAug(
+            model_path='bert-base-uncased', 
+            action="substitute", 
+            aug_max=aug_max,
             device=device
         )
-        self.augment_list = [context_aug, back_translation_aug]
+        # back_translation_aug = naw.BackTranslationAug(
+        #     from_model_name='facebook/wmt19-en-de', 
+        #     to_model_name='facebook/wmt19-de-en',
+        #     device=device
+        # )
+        self.augment_list = [roberta_aug, bert_aug]
         self.prob = prob
 
     def apply(self, text):
         if random.random() > self.prob:
             return text
         aug = random.choice(self.augment_list)
-        return aug.augment(text)
+        result = aug.augment(text)[0]
+        return result if result else text

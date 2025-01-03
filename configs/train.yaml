@@ -1,15 +1,19 @@
 dataset:
   train:
     filepath:
-      - ./data/7k_sentences_train.jsonl
+      - ./data/14k_sentences_train.jsonl
     max_len: &max_len 512
     padding: &padding "max_length"
+    augment: true
 
   val:
     filepath:
-      - ./data/7k_sentences_eval.jsonl
+      - ./data/139_sentences_eval.jsonl
+      - ./data/chatgpt-161-eval.jsonl
+      - ./data/claude-100-eval.jsonl
     max_len: *max_len
     padding: *padding
+    augment: false
 
   loaders:
     batch_size: 8
@@ -21,12 +25,13 @@ model:
   dropout: 0.3
 
 optimizer:
-  lr: 1e-05
+  lr: 1e-5
+  weight_decay: 1e-2
 
 callbacks:
   checkpointing:
     monitor: val_acc
-    save_top_k: 10
+    save_top_k: -1
     save_last: True
     filename: "{epoch}-{val_acc:.5f}"
     every_n_epochs: 1
@@ -39,7 +44,7 @@ loggers:
     default_hp_metric: false
 
 trainer:
-  max_epochs: 10
+  max_epochs: 30
   strategy: ddp_find_unused_parameters_false
   accelerator: gpu
   devices: [0, 1]
