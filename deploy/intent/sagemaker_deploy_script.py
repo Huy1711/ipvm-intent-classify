@@ -1,6 +1,7 @@
 import os
 import boto3
 from sagemaker.pytorch import PyTorchModel
+from sagemaker.serverless import ServerlessInferenceConfig
 import tarfile
 import torch
 
@@ -24,7 +25,8 @@ def push_model_to_s3(model_path, bucket_name=BUCKET_NAME):
 
 
 def deploy_model(
-        model_path, 
+        model_path,
+        serverless=False,
         role_arn=None, 
         instance_type='ml.g4dn.xlarge', 
         endpoint_name='intent-model-endpoint', 
@@ -45,16 +47,28 @@ def deploy_model(
         framework_version=torch_version,
         py_version=py_version,
         entry_point='inference.py',
-        source_dir='.'
+        source_dir=os.path.join(LOCAL_MODEL_PATH, 'code')
     )
 
     delete_endpoint_config(endpoint_name)
 
-    pytorch_model.deploy(
-        endpoint_name=endpoint_name,
-        instance_type=instance_type,
-        initial_instance_count=1
-    )
+    if serverless:
+        serverless_config = ServerlessInferenceConfig(
+            memory_size_in_mb=6144, max_concurrency=3,
+        )
+        
+        pytorch_model.deploy(
+            endpoint_name=endpoint_name,
+            serverless_inference_config=serverless_config
+        )
+    else:
+        pytorch_model.deploy(
+            endpoint_name=endpoint_name,
+            instance_type=instance_type,
+            initial_instance_count=1
+        )
+
+   
 
 
 def does_endpoint_config_exist(endpoint_config_name):
@@ -78,11 +92,9 @@ def compress_model(model_path):
     archive_file_name = f"{file_name}.tar.gz"
     with tarfile.open(os.path.join(dir_name, archive_file_name), 'w:gz') as tar:
         tar.add(os.path.join(model_path, "model.pt"), arcname="model.pt")
-        tar.add(os.path.join(model_path, "inference.py"), arcname="inference.py")
-        tar.add(os.path.join(model_path, "requirements.txt"), arcname="requirements.txt")
-
+        tar.add(os.path.join(model_path, "code"), arcname="code")
     return os.path.join(dir_name, archive_file_name)
 
 
 if __name__ == '__main__':
-    deploy_model(LOCAL_MODEL_PATH)
+    deploy_model(LOCAL_MODEL_PATH, serverless=True)
