@@ -97,4 +97,4 @@ def compress_model(model_path):
 
 
 if __name__ == '__main__':
-    deploy_model(LOCAL_MODEL_PATH, serverless=True)
+    deploy_model(LOCAL_MODEL_PATH, serverless=False)

@@ -7,13 +7,13 @@ from intent_classify.models import DistillBERTClassifier
 from intent_classify.utils import load_dataset, convert_intent_label_to_id, id_to_label_dict
 
 
-CHECKPOINT_PATH = "lightning_logs/version_0/epoch7.ckpt"
-# EVAL_SET_PATH = [
-#     "data/139_sentences_eval.jsonl",
-#     "data/chatgpt-262-eval.jsonl",
-#     "data/claude-100-eval.jsonl",
-# ]
-EVAL_SET_PATH = ["data/error_eval.jsonl"]
+CHECKPOINT_PATH = "lightning_logs/version_7/epoch17.ckpt"
+EVAL_SET_PATH = [
+    "data/139_sentences_eval.jsonl",
+    "data/chatgpt-161-eval.jsonl",
+    "data/claude-100-eval.jsonl",
+]
+# EVAL_SET_PATH = ["data/error_eval.jsonl"]
 
 
 def predict(inputs):
@@ -29,6 +29,7 @@ if __name__ == "__main__":
     model.load_state_dict(
         torch.load(CHECKPOINT_PATH, map_location=torch.device("cpu"))["state_dict"]["model"]
     )
+    # model = torch.jit.load(CHECKPOINT_PATH)
     model.eval()
     nlp = spacy.load('/Users/huynd/recommendation-v2-api/model')
 
